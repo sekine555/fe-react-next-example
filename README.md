@@ -38,3 +38,12 @@ $ yarn start:build
   │   │   └── index.ts ・・・ コンポーネントを出力するファイル
   │   ├── helper  ・・・ 複数のコンポーネントから利用されるコンポーネントの管理ディレクトリ
   ```
+
+# 機能
+
+## 表形式
+
+- URL：/tablar-form
+- React Hook Form の useFieldArray を使用して、複数テーブルの入力とエラー制御の実装サンプル
+  - React Hook Form: v7.34.0
+- insert メソッドを使って、明示的に指定した位置に新規行を追加する機能
