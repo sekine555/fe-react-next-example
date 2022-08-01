@@ -2,6 +2,7 @@ import DropDown from "@/components/helper/DropDown";
 import { SubjectType, SubjectTypes } from "@/type/domain/constants/Subject";
 import {
   FieldArrayWithId,
+  FieldErrors,
   UseFieldArrayInsert,
   UseFormRegister,
 } from "react-hook-form";
@@ -25,6 +26,7 @@ interface Props {
     items: FieldArrayWithId<ScoreFormData, FieldArrayName, ItemKey>[],
     subject: SubjectType,
   ) => void;
+  errors: FieldErrors<ScoreFormData>;
 }
 
 const Presenter: React.FC<Props> = (props) => {
@@ -37,29 +39,36 @@ const Presenter: React.FC<Props> = (props) => {
     onChangeSubject,
     insert,
     onClickInsertRow,
+    errors,
   } = props;
 
   return (
     <>
-      <table>
-        <thead>
-          <tr>
-            <td>
+      <table className={"w-full"}>
+        <thead
+          className={
+            "px-2 first:pl-0 last:pr-0 text-xs text-left text-gray-800 w-3/12 font-bold"
+          }
+        >
+          <tr className={"align-top table-row"}>
+            <td className={"px-2 text-sm text-gray-600"}>
               <p>選択</p>
             </td>
-            <td>
+            <td className={"px-1 w-10 text-center text-sm text-gray-600"}>
               <p>教科</p>
             </td>
             {scoreTableHeader.map((yearMonth, index) => (
-              <td key={index}>{yearMonth}</td>
+              <td key={index} className={"px-1 text-sm text-gray-600"}>
+                {yearMonth}
+              </td>
             ))}
           </tr>
         </thead>
 
         <tbody>
           {items.map((item, index) => (
-            <tr key={index}>
-              <td>
+            <tr key={index} className={"align-top table-row"}>
+              <td className={"px-4 text-center"}>
                 <input
                   type={"checkbox"}
                   defaultChecked={item.isSelected}
@@ -68,28 +77,39 @@ const Presenter: React.FC<Props> = (props) => {
                   )}
                 />
               </td>
-              <td>
+              <td className={"px-1 text-center text-sm text-gray-600"}>
                 <p>{item.subject.name}</p>
               </td>
               {item.scores.map((score, idx) => (
-                <td key={score.yearMonth}>
-                  <input
-                    type={"number"}
-                    defaultValue={score.score || undefined}
-                    {...register(
-                      `${fieldArrayName}.${index}.scores.${idx}.score` as const,
-                      {
-                        max: {
-                          value: 100,
-                          message: "",
+                <td
+                  key={score.yearMonth}
+                  className={"px-1 text-sm text-gray-600"}
+                >
+                  <div>
+                    <input
+                      type={"text"}
+                      defaultValue={score.score || undefined}
+                      {...register(
+                        `${fieldArrayName}.${index}.scores.${idx}.score` as const,
+                        {
+                          min: {
+                            value: 0,
+                            message: "0〜100の数値を入力してください",
+                          },
+                          max: {
+                            value: 100,
+                            message: "0〜100の数値を入力してください",
+                          },
+                          pattern: {
+                            value: /^[0-9]+$/,
+                            message: "半角数値で入力してください",
+                          },
                         },
-                        pattern: {
-                          value: /^[0-9]+$/,
-                          message: "",
-                        },
-                      },
-                    )}
-                  />
+                      )}
+                      className={`border-gray-200 focus:border-gray-500 focus:outline-none appearance-none block py-3 px-4 w-full leading-tight text-gray-700 focus:bg-white rounded border`}
+                    />
+                    <div className={"mt-1 text-xs text-red-500"}>aaa</div>
+                  </div>
                 </td>
               ))}
             </tr>
@@ -97,7 +117,7 @@ const Presenter: React.FC<Props> = (props) => {
         </tbody>
       </table>
 
-      <div className={`flex`}>
+      <div className={`flex py-4`}>
         <DropDown<SubjectType>
           value={selectedSubject}
           onSelect={onChangeSubject}
@@ -111,6 +131,9 @@ const Presenter: React.FC<Props> = (props) => {
           type={"button"}
           value="行追加"
           onClick={() => onClickInsertRow(insert, items, selectedSubject)}
+          className={
+            "ml-4 px-2 py-1 bg-blue-400 text-white font-semibold rounded hover:bg-blue-500"
+          }
         />
       </div>
     </>
