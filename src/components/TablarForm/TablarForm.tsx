@@ -29,12 +29,15 @@ const TablarForm: React.FC<Props> = (props) => {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm<ScoreFormData>({
     defaultValues: {
       scoreTableAItems: scroreTableA,
       scoreTableBItems: scroreTableB,
     },
+    mode: "onSubmit", // registerをいつ検証するかの指定（デフォルトは、onSubmit）
+    reValidateMode: "onSubmit", // エラー後の再検証イベントの指定（デフォルトは、onChange）
   });
 
   // スコアテーブルAのuseFieldArray構築
@@ -146,6 +149,7 @@ const TablarForm: React.FC<Props> = (props) => {
     data: ScoreFormData,
   ) => {
     console.log("submit data:", data);
+    reset();
   };
 
   return (
