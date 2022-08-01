@@ -108,7 +108,16 @@ const Presenter: React.FC<Props> = (props) => {
                       )}
                       className={`border-gray-200 focus:border-gray-500 focus:outline-none appearance-none block py-3 px-4 w-full leading-tight text-gray-700 focus:bg-white rounded border`}
                     />
-                    <div className={"mt-1 text-xs text-red-500"}>aaa</div>
+
+                    {/* NOTE: 配列内のプロパティ名を動的に指定しているため、ブラケット記法（[]）を使って、errorsのプロパティにアクセスしている */}
+                    {errors[fieldArrayName]?.[index]?.scores?.[idx]?.score && (
+                      <div className={"mt-1 text-xs text-red-500"}>
+                        {
+                          errors[fieldArrayName]?.[index]?.scores?.[idx]?.score
+                            ?.message
+                        }
+                      </div>
+                    )}
                   </div>
                 </td>
               ))}

@@ -42,6 +42,7 @@ const Presenter: React.FC<Props> = (props) => {
     onSubmitScoreRegistration,
     errors,
   } = props;
+
   return (
     <>
       <form onSubmit={onSubmit(onSubmitScoreRegistration)}>

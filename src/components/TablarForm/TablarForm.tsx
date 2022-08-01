@@ -37,8 +37,6 @@ const TablarForm: React.FC<Props> = (props) => {
     },
   });
 
-  console.log("エラー：", errors);
-
   // スコアテーブルAのuseFieldArray構築
   const { fields: scoreTableAItems, insert: insertTableA } = useFieldArray({
     control,
