@@ -6,15 +6,21 @@ import {
   UseFormHandleSubmit,
   UseFormRegister,
 } from "react-hook-form";
+import ScoreItem from "./ScoreItem";
 import { ScoreFormData } from "./TablarForm";
-import { FieldArrayName, ItemKey } from "./type";
+import { FieldArrayName, ItemKey, ScoreTableProps } from "./type";
 
 interface Props {
+  scoreTableHeader: string[];
+  scoreTableAProps: ScoreTableProps;
+  scoreTableBProps: ScoreTableProps;
   register: UseFormRegister<ScoreFormData>;
-  selectedSubject: SubjectType;
-  onChangeSubject: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  insertTableA: UseFieldArrayInsert<ScoreFormData, "scoreTableAItems">;
+  insertTableB: UseFieldArrayInsert<ScoreFormData, "scoreTableBItems">;
   onClickInsertRow: (
-    insert: UseFieldArrayInsert<ScoreFormData, FieldArrayName>,
+    insert:
+      | UseFieldArrayInsert<ScoreFormData, "scoreTableAItems">
+      | UseFieldArrayInsert<ScoreFormData, "scoreTableBItems">,
     items: FieldArrayWithId<ScoreFormData, FieldArrayName, ItemKey>[],
     subject: SubjectType,
   ) => void;
@@ -25,14 +31,45 @@ interface Props {
 
 const Presenter: React.FC<Props> = (props) => {
   const {
+    scoreTableHeader,
+    scoreTableAProps,
+    scoreTableBProps,
     register,
-    selectedSubject,
-    onChangeSubject,
+    insertTableA,
+    insertTableB,
     onClickInsertRow,
     onSubmit,
     onSubmitScoreRegistration,
   } = props;
-  return <>表形式UI</>;
+  return (
+    <>
+      <form onSubmit={onSubmit(onSubmitScoreRegistration)}>
+        <ScoreItem
+          fieldArrayName={FieldArrayName.SCORE_TABLE_A}
+          scoreTableHeader={scoreTableHeader}
+          register={register}
+          items={scoreTableAProps.items}
+          selectedSubject={scoreTableAProps.selectedSubject}
+          onChangeSubject={scoreTableAProps.onChangeSubject}
+          insert={insertTableA}
+          onClickInsertRow={onClickInsertRow}
+        />
+
+        <ScoreItem
+          fieldArrayName={FieldArrayName.SCORE_TABLE_B}
+          scoreTableHeader={scoreTableHeader}
+          register={register}
+          items={scoreTableBProps.items}
+          selectedSubject={scoreTableBProps.selectedSubject}
+          onChangeSubject={scoreTableBProps.onChangeSubject}
+          insert={insertTableB}
+          onClickInsertRow={onClickInsertRow}
+        />
+
+        <button type={"submit"}>登録</button>
+      </form>
+    </>
+  );
 };
 
 export default Presenter;

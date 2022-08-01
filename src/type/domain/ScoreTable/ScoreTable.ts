@@ -1,7 +1,7 @@
 import { Subject } from "../constants/Subject";
 
-type Score = {
-  id: number;
+export type Score = {
+  id: number | null;
   yearMonth: string;
   score: number | null;
 };

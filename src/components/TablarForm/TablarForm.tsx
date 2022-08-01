@@ -1,5 +1,5 @@
 import { SubjectType, SubjectTypes } from "@/type/domain/constants/Subject";
-import { ScoreTable } from "@/type/domain/ScoreTable/ScoreTable";
+import { Score, ScoreTable } from "@/type/domain/ScoreTable/ScoreTable";
 import React, { useState } from "react";
 import {
   FieldArrayWithId,
@@ -12,6 +12,7 @@ import Presenter from "./Presenter";
 import { FieldArrayName, ItemKey } from "./type";
 
 interface Props {
+  scoreTableHeader: string[];
   scroreTableA: ScoreTable[];
   scroreTableB: ScoreTable[];
 }
@@ -22,7 +23,7 @@ export interface ScoreFormData {
 }
 
 const TablarForm: React.FC<Props> = (props) => {
-  const { scroreTableA, scroreTableB } = props;
+  const { scoreTableHeader, scroreTableA, scroreTableB } = props;
 
   const {
     register,
@@ -38,38 +39,105 @@ const TablarForm: React.FC<Props> = (props) => {
 
   console.log("エラー：", errors);
 
+  // スコアテーブルAのuseFieldArray構築
   const { fields: scoreTableAItems, insert: insertTableA } = useFieldArray({
     control,
     name: FieldArrayName.SCORE_TABLE_A,
   });
 
+  // スコアテーブルBのuseFieldArray構築
   const { fields: scoreTableBItems, insert: insertTableB } = useFieldArray({
     control,
     name: FieldArrayName.SCORE_TABLE_B,
   });
 
-  const [selectedSubject, setSelectedSubject] = useState<SubjectType>(
-    SubjectTypes[0],
-  );
+  const [selectedTableASubject, setSelectedTableASubject] =
+    useState<SubjectType>(SubjectTypes[0]);
   /**
-   * 教科のドロップダウンリスト変更イベント処理
+   * スコアテーブルAの教科選択ドロップダウンリスト変更イベント処理
    * @param event チェンジイベント要素
    */
-  const handleChangeSubject = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChangeTableASubject = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
     try {
       const value = JSON.parse(event.target.value) as SubjectType;
-      setSelectedSubject(value);
+      setSelectedTableASubject(value);
     } catch (error) {
       throw new Error(`SubjectTypeの型アサーションエラー: ${error}`);
     }
   };
 
+  const [selectedTableBSubject, setSelectedTableBSubject] =
+    useState<SubjectType>(SubjectTypes[0]);
+  /**
+   * スコアテーブルBの教科選択ドロップダウンリスト変更イベント処理
+   * @param event チェンジイベント要素
+   */
+  const handleChangeTableBSubject = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    try {
+      const value = JSON.parse(event.target.value) as SubjectType;
+      setSelectedTableBSubject(value);
+    } catch (error) {
+      throw new Error(`SubjectTypeの型アサーションエラー: ${error}`);
+    }
+  };
+
+  /**
+   * スコアテーブルの初期データ生成処理
+   * @param subject 教科
+   * @param yearMonthList 年月リスト
+   * @returns
+   */
+  const buildInitialData = (
+    subject: SubjectType,
+    yearMonthList: string[],
+  ): ScoreTable => {
+    const scores: Score[] = [];
+    for (let i = 0; i < yearMonthList.length; i++) {
+      scores.push({
+        id: null,
+        yearMonth: yearMonthList[i],
+        score: null,
+      });
+    }
+
+    return {
+      isSelected: false,
+      subject,
+      scores,
+    };
+  };
+
+  /**
+   * 新規入力行追加処理
+   * @param insert useFieldArrayのinsertメソッド
+   * @param items useFieldArrayコントール配下のデータ
+   * @param subject 行追加対象の教科
+   */
   const handleClickInsertRow = (
-    insert: UseFieldArrayInsert<ScoreFormData, FieldArrayName>,
+    insert:
+      | UseFieldArrayInsert<ScoreFormData, "scoreTableAItems">
+      | UseFieldArrayInsert<ScoreFormData, "scoreTableBItems">,
     items: FieldArrayWithId<ScoreFormData, FieldArrayName, ItemKey>[],
     subject: SubjectType,
   ) => {
+    const foundSubjectLastIndex = items
+      .map((item) => item.subject.id)
+      .lastIndexOf(subject.id);
+
+    // 見つからない場合には、システム異常のため、スローさせる
+    if (foundSubjectLastIndex === -1) {
+      throw new Error(`Not Found ${subject}`);
+    }
+
     // 引数に指定された教科の末尾に新規の入力行を追加する
+    insert(
+      foundSubjectLastIndex + 1,
+      buildInitialData(subject, scoreTableHeader),
+    );
   };
 
   /**
@@ -84,9 +152,20 @@ const TablarForm: React.FC<Props> = (props) => {
 
   return (
     <Presenter
+      scoreTableHeader={scoreTableHeader}
+      scoreTableAProps={{
+        selectedSubject: selectedTableASubject,
+        onChangeSubject: handleChangeTableASubject,
+        items: scoreTableAItems,
+      }}
+      scoreTableBProps={{
+        selectedSubject: selectedTableBSubject,
+        onChangeSubject: handleChangeTableBSubject,
+        items: scoreTableBItems,
+      }}
       register={register}
-      selectedSubject={selectedSubject}
-      onChangeSubject={handleChangeSubject}
+      insertTableA={insertTableA}
+      insertTableB={insertTableB}
       onClickInsertRow={handleClickInsertRow}
       onSubmit={handleSubmit}
       onSubmitScoreRegistration={handleSubmitScoreRegistration}
