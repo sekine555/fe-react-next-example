@@ -36,5 +36,14 @@ $ yarn start:build
   │   │   ├── Header.tsx ・・・ Container層として、ロジックを定義するファイル
   │   │   └── Presenter.tsx ・・・ Container層から表示に必要なpropsを受領し、画面表示するためのファイル
   │   │   └── index.ts ・・・ コンポーネントを出力するファイル
-  │   ├── Header
+  │   ├── helper  ・・・ 複数のコンポーネントから利用されるコンポーネントの管理ディレクトリ
   ```
+
+# 機能
+
+## 表形式
+
+- URL：/tablar-form
+- React Hook Form の useFieldArray を使用して、複数テーブルの入力とエラー制御の実装サンプル
+  - React Hook Form: v7.34.0
+- insert メソッドを使って、明示的に指定した位置に新規行を追加する機能
