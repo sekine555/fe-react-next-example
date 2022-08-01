@@ -36,5 +36,5 @@ $ yarn start:build
   │   │   ├── Header.tsx ・・・ Container層として、ロジックを定義するファイル
   │   │   └── Presenter.tsx ・・・ Container層から表示に必要なpropsを受領し、画面表示するためのファイル
   │   │   └── index.ts ・・・ コンポーネントを出力するファイル
-  │   ├── Header
+  │   ├── helper  ・・・ 複数のコンポーネントから利用されるコンポーネントの管理ディレクトリ
   ```
