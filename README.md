@@ -64,7 +64,7 @@ participant A as フロントエンド（FE）
 participant B as バックエンド（BE）
 participant C as Stripe
 A->>C: トークン生成（create token）
-A-->>C: トークンレスポンス (Token: json)
+C-->>A: トークンレスポンス (Token: json)
 Note left of C: StripeにてFEからのクレジットカード情報に紐づくトークンが生成される
 
 A->>B: クレカ登録API
