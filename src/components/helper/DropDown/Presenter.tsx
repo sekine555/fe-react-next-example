@@ -1,6 +1,5 @@
 import { isObject } from "@/utils/isObject";
 import React from "react";
-import DownTriangle from "@/components/helper/Icons/DownTriangle";
 import Image from "next/image";
 
 interface Props<T> {
