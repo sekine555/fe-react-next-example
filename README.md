@@ -54,7 +54,7 @@ $ yarn start:build
 ### クレジットカード登録
 
 - URL：/payment
-- React 用の Stripe ライブラリを使用して、クレジットカード登録用の実装サンプル（[公式サイト](https://stripe.com/docs/stripe-js/react)
+- React 用の Stripe ライブラリを使用して、クレジットカード登録用の実装サンプル（[公式サイト](https://stripe.com/docs/stripe-js/react)）
 - クレジットカード情報を入力する UI に関しては、スタイリングを柔軟にしたいため、カード番号、カード有効期限、セキュリティコードそれぞれの分割されたコンポーネントを使用している
 - 処理方式としては、フロントエンドと Stripe で完結させるのではなく、Stripe から生成されたトークンを取得し、それをバックエンドの API に渡す方針としている
 
