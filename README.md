@@ -48,3 +48,28 @@ $ yarn start:build
 - React Hook Form の useFieldArray を使用して、複数テーブルの入力とエラー制御の実装サンプル
   - React Hook Form: v7.34.0
 - insert メソッドを使って、明示的に指定した位置に新規行を追加する機能
+
+## Stripe 決済
+
+### クレジットカード登録
+
+- URL：/payment
+- React 用の Stripe ライブラリを使用して、クレジットカード登録用の実装サンプル（[公式サイト](https://stripe.com/docs/stripe-js/react)
+- クレジットカード情報を入力する UI に関しては、スタイリングを柔軟にしたいため、カード番号、カード有効期限、セキュリティコードそれぞれの分割されたコンポーネントを使用している
+- 処理方式としては、フロントエンドと Stripe で完結させるのではなく、Stripe から生成されたトークンを取得し、それをバックエンドの API に渡す方針としている
+
+```mermaid
+sequenceDiagram
+participant A as フロントエンド（FE）
+participant B as バックエンド（BE）
+participant C as Stripe
+A->>C: トークン生成（create token）
+A-->>C: トークンレスポンス (Token: json)
+Note left of C: StripeにてFEからのクレジットカード情報に紐づくトークンが生成される
+
+A->>B: クレカ登録API
+Note right of A: BEに独自APIを用意し、FEからトークンを受け取って、別途Stripeへ登録処理を実施する
+
+B->>C: Customer.create
+Note right of B: Stripeにユーザ登録及びクレカ登録
+```
