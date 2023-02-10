@@ -10,10 +10,14 @@ const PrintOrganizer: React.FC = () => {
    * 印刷時のスタイル設定（印刷仕様に応じてスタイリングを調整します）
    * 　NOTE
    * 　・背景色/背景画像を表示させる設定（Chrome）：-webkit-print-color-adjust: exact
-   * 　・pageのmargin指定でプレビュー時にデフォルト表示されるURLと時刻を表示エリアから外している
+   * 　・pageのmargin指定でプレビュー時にデフォルト表示されるURLと時刻（ヘッダーとフッター）を表示エリアから外している
    */
   const pageStyle = `
-    @page { size: auto; margin: 5mm; }
+    @page { 
+      size: auto;
+      margin: 5mm;
+    }
+    
     @media print {
       body { -webkit-print-color-adjust: exact; }
       table { break-after: auto; }
