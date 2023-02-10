@@ -73,3 +73,10 @@ Note right of A: BEに独自APIを用意し、FEからトークンを受け取�
 B->>C: Customer.create
 Note right of B: Stripeにユーザ登録及びクレカ登録
 ```
+
+## 印刷
+
+### 印刷
+
+- URL：/print
+- [react-to-print](https://github.com/gregnb/react-to-print)を活用してブラウザに表示されているコンテンツを印刷する
